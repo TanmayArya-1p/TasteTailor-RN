@@ -23,7 +23,7 @@ export default function HomePage({ route }) {
     <View style={styles.container}>
       <View className="mb-5 flex-row justify-between">
         <Text style={styles.header}>Welcome {username}!</Text>
-        <Button mode="contained" onPress={() => navigation.navigate("UserSettings")} style={{borderRadius:1000 , height:50 , width:20 , backgroundColor:"#f6e8fc"}}>
+        <Button mode="contained" onPress={() => navigation.navigate("UserSettings")} style={{borderRadius:25 , height:50 , width:20 , backgroundColor:"#f6e8fc"}}>
         </Button>
       </View>
 
@@ -33,10 +33,10 @@ export default function HomePage({ route }) {
         value= {canteenFilter}
         mode="bar"
         className="mb-5"
+        icon={"magnify"}
         style={{backgroundColor:"white" , shadowColor:"#ad08ff" , borderColor : "black" , borderWidth : 0.3 , borderColor:"#ad08ff" , borderRadius:10}}
       ></Searchbar>
       <ScrollView>
-        {/* Render Canteen Cards */}
         {[...Array(10)].map((_, index) => (<CanteenCard canteenID={index}></CanteenCard>
         ))}
       </ScrollView>

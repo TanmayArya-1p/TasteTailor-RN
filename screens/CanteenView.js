@@ -4,6 +4,11 @@ import { Card } from 'react-native-paper';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { Searchbar } from 'react-native-paper';
 import {FoodCard} from './components/Food';
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export default function CanteenView({route}) {
     let {canteen} = route.params
     let {foodFilter , setFoodFilter} = useState("")
@@ -14,8 +19,8 @@ export default function CanteenView({route}) {
 
       <View style={styles.detailsContainer}>
 
-        <Text style={styles.info}>Type: {canteen.type}</Text>
-        <Text style={styles.info}>Opening Hours: {canteen.openingHours}</Text>
+        <Text style={styles.info}>Type: {capitalize(canteen.type)} Canteen</Text>
+        <Text style={styles.info}>Opening Hours: {capitalize(canteen.openingHours)}</Text>
         <StarRatingDisplay
                     rating={canteen.rating}
                     starSize={20}

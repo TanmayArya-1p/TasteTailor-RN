@@ -28,7 +28,7 @@ export default function App() {
           <Stack.Screen name="CanteenView" component={CanteenView} options={{ headerShown: false }} />
           <Stack.Screen name="UserSettings" component={UserSettings} options={{ headerShown: true }} />
           <Stack.Screen name="FoodReviewPage" component={FoodReviewPage} options={{ headerShown: false }} />
-          <Stack.Screen name="ReviewFormPage" component={ReviewFormPage} options={{ headerShown: true }} />
+          <Stack.Screen name="ReviewFormPage" component={ReviewFormPage} options={{ headerShown: true ,title:""}} />
         </Stack.Navigator>
       </NavigationContainer>
       </PaperProvider>

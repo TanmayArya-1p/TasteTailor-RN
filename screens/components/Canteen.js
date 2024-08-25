@@ -34,8 +34,8 @@ function CanteenCard({canteenID}) {
                 <Card.Cover style={{marginTop:10}} source={{ uri: 'https://picsum.photos/700'}} />
             </Card.Content>
             <Card.Actions classname="mt-5" style={{marginTop:10}}>
-                <Button style={{borderRadius:10 , shadowColor:"black" , shadowOpacity:1 , borderWidth:0.2}} onPress={() => navigation.navigate("CanteenView" , {canteen})}>
-                    <Text style={{fontSize:17 , color:"#8a8787"}}> Explore ▶</Text>
+                <Button mode="elevated" style={{borderRadius:5 ,backgroundColor: "white" ,  shadowColor:"#ad08ff" , shadowOpacity:1 , borderWidth:0.2}} onPress={() => navigation.navigate("CanteenView" , {canteen})}>
+                    <Text style={{fontSize:17 , color:"#8a8787" }}> Explore ▶</Text>
                 </Button>
             </Card.Actions>
         </Card>
@@ -80,6 +80,11 @@ const styles = StyleSheet.create({
         backgroundColor : "#ffffff",
         borderColor: "#cd83f2",
         shadowColor: "#ad08ff",
+        shadowOpacity: 1,
+        borderWidth: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+        borderRadius: 10,
 
     },
     logo: {

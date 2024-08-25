@@ -7,6 +7,10 @@ import { Button , Icon , ProgressBar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
 
+function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 function FoodCard({fID}) {
     // TODO : FETCH IT FROM ACTUAL BACKEND
     navigation = useNavigation()
@@ -25,41 +29,28 @@ function FoodCard({fID}) {
 
     return <>
           <Card key={fID} style={styles.foodCard}>
-            <Card.Title title={`${food.name}`} subtitle={food.description}/>
-            <Card.Content>
+            <Card.Title titleStyle={styles.header} title={`${food.name}, ₹${food.price}`} subtitle={food.description}/>
+            <Card.Content style={{alignItems:"center"}}>
                 <StarRatingDisplay
                     rating={food.rating}
                     starSize={17}
+                    style={{marginBottom:20}}
                 />
             </Card.Content>
-            <Card.Cover style = {styles.logo}source={{ uri: food.imgUrl }} />
-            <Text style={styles.header}>₹{food.price}</Text>
-            <Card.Actions>
+            <View style={{alignItems:"center" , justifyContent:"center"}}>
+            <Card.Cover style = {styles.logo} styles={{alignContent:"center", alignItems:"center"}} source={{ uri: food.imgUrl }} />
+            </View>
+
+            <Card.Actions style={{alignContent:"center"}}>
                 <Button onPress={()=> {
-                    navigation.navigate("ReviewFormPage" , {fID})}}>
-                <Text style={styles.name}>Reviews ▶</Text>
+                    navigation.navigate("FoodReviewPage" , {fID})}}>
+                <Text style={styles.name1}>Reviews ▶</Text>
                 </Button>
             </Card.Actions>
           </Card>
     </>
 }
 
-const fetchReviews = async (reviewIDs) => {
-    return reviewIDs.map((id, index) => ({
-      id,
-      reviewer: `Reviewer ${index + 1}`,
-      reviewText: `This is a review for review ID ${id}.`,
-      rating: Math.floor(Math.random() * 5) + 1,
-    }));
-};
-
-const fetchPropertyRatings = async (props) => {
-    // Simulate fetching property ratings (e.g., spiciness, sweetness) for each property
-    return props.map((prop) => ({
-      name: prop,
-      rating: Math.floor(Math.random() * 5) + 1, // Random rating for the example
-    }));
-};  
 
 const FoodReviewPage = ({ route }) => {
     const {fID } = route.params
@@ -109,21 +100,26 @@ const FoodReviewPage = ({ route }) => {
   
         {/* Food Details */}
         <View style={styles.detailsContainer}>
-          <Text style={styles.name} className="text-black">{food.name}</Text>
-          <Text style={styles.info}>Type: {food.type}</Text>
-          <Text style={styles.info}>Price: ₹{food.price}</Text>
-          <Text style={styles.info}>Serves: {food.serves}</Text>
-          <Text style={styles.info}>Rating: {food.rating} / 5</Text>
+            <View className="flex-row justify-between">
+                <Text style={styles.name} className="text-black">{food.name} , ₹{food.price}</Text>
+                <StarRatingDisplay
+                    rating={food.rating}
+                    starSize={25}
+                    style={{marginBottom:20}}
+                />
+
+            </View>
+          <Text style={styles.info}> {capitalize(food.type)}, Serves {food.serves} </Text>
+          
         </View>
   
         {/* Property Meters */}
-        <Text style={styles.propertiesTitle}>Properties:</Text>
         {propertyRatings.map((property, index) => (
           <View key={index} style={styles.propertyContainer}>
             <Text style={styles.propertyName}>{property.name}</Text>
             <ProgressBar
               progress={property.rating / 5}
-              color={'#6200ee'}
+              color={'#b058fc'}
               style={styles.progressBar}
             />
             <Text style={styles.propertyRating}>{property.rating} / 5</Text>
@@ -131,14 +127,19 @@ const FoodReviewPage = ({ route }) => {
         ))}
   
         {/* Reviews Section */}
-        <Text style={styles.reviewsTitle}>Recent Reviews:</Text>
+        <Text style={styles.reviewsTitle}>Recent Reviews</Text>
         {reviews.length > 0 ? (
           reviews.slice(0,4).map((review) => (
             <Card key={review.id} style={styles.reviewCard}>
-              <Card.Title title={review.reviewer} />
+              <Card.Title titleStyle={{color:"black"}} title={review.reviewer} />
               <Card.Content>
-                <Text>{review.reviewText}</Text>
-                <Text style={styles.reviewRating}>Rating: {review.rating} / 5</Text>
+                <StarRatingDisplay
+                    rating={review.rating}
+                    starSize={20}
+                    style={{marginBottom:20}}
+                />
+                <Text style={{color:"black"}}>{review.reviewText}</Text>
+
               </Card.Content>
             </Card>
           ))
@@ -146,10 +147,10 @@ const FoodReviewPage = ({ route }) => {
           <Text>No reviews available.</Text>
         )}
         <Card key={"Add Review"} style={styles.addreviewCard} className="">
-            <Card.Actions>
-                <Button onPress={()=> {
+            <Card.Actions style={{alignContent:"center" , justifyContent:"center"}}>
+                <Button style={{width:"100%" , borderWidth:0}} onPress={()=> {
                     navigation.navigate("ReviewFormPage" , {fID})}}>
-                    <Text style={styles.name}>Write A Review</Text>
+                    <Text style={{color:"black" , fontSize:18}}>📝 Write A Review</Text>
                 </Button>
             </Card.Actions>
         </Card>
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 5,
         color: "black",
         fontWeight: "bold",
         fontSize: 20,
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
     },
     logo: {
-        width: 50,
-        height: 50,
+        width: 80,
+        height: 80,
     },
     image: {
       width: '100%',
@@ -189,11 +190,17 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
     name: {
-      fontSize: 13,
+      fontSize: 20,
       fontWeight: 'bold',
       marginBottom: 10,
       color: "black"
     },
+    name1: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: "black"
+      },
     info: {
       fontSize: 16,
       marginBottom: 5,
@@ -214,7 +221,11 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
       borderRadius: 1,
       alignContent: 'center',
-      height: 200
+      height: 250,
+      shadowColor: "purple",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.8,
+      padding:5
     },
     image: {
         width: '100%',
@@ -259,12 +270,29 @@ const styles = StyleSheet.create({
       reviewCard: {
         marginBottom: 10,
         justifyContent: 'center',
+        backgroundColor : "#ffffff",
+        borderColor: "#cd83f2",
+        shadowColor: "#ad08ff",
+        shadowOpacity: 1,
+        borderWidth: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+        borderRadius: 10,
 
       },
       addreviewCard: {
         marginBottom: 10,
         alignContent: 'center',
+        justifyContent: "center",
         marginBottom: 40,
+        backgroundColor : "#ffffff",
+        borderColor: "#cd83f2",
+        shadowColor: "#ad08ff",
+        shadowOpacity: 1,
+        borderWidth: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+        borderRadius: 10,
       },
       reviewRating: {
         marginTop: 5,
