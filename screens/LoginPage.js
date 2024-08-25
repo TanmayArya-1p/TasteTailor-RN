@@ -1,24 +1,52 @@
-// screens/LoginPage.js
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button , TextInput } from 'react-native-paper';
+import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from "./atoms"
+import { useRecoilState, useRecoilValue ,useRecoilValueLoadable} from 'recoil';
+import axios from 'axios';
 
 export default function LoginPage({ navigation }) {
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [bakedUsername , setBakedUsername] = useRecoilState(userNameAtom);
+  const [bakedPassword, setBakedPassword] = useRecoilState(passwordAtom);
+  const [sID, setSID] = useRecoilState(sIDAtom);
+  const serverUrl = useRecoilValueLoadable(serverUrlAtom)
+
+
 
   const handleLogin = () => {
     if (username === '') {
       alert('Please enter your enrollment number');
       return;
     }
-    if (username === 'admin') {
-      navigation.navigate('Home', { username });
+    if(password === '') {
+      alert("Invalid Password")
       return;
     }
-
-    navigation.navigate('Home', { username });
-
+    console.log(serverUrl.contents+"/users/login",{
+      enrollmentNumber : username,
+      password : password
+    })
+    axios.put("http://"+serverUrl.contents+"/users/login" , {
+      enrollmentNumber : username,
+      password : password
+    }).then((res)=> {
+      console.log(res.data,res.status)
+      if(res.status !== 200) {
+        alert("Invalid Username or Password")
+        return;
+      }
+      setSID(res.data.sessionToken)
+      setBakedPassword(password)
+      setBakedUsername(res.data.enrollmentNumber)
+      navigation.navigate('Home', { username });
+    })
+    return;
   };
+
+
 
   return (
     <View style={styles.container}>
@@ -38,6 +66,8 @@ export default function LoginPage({ navigation }) {
         secureTextEntry
         mode="outlined"
         cursorColor='purple'
+        value={password}
+        onChangeText={setPassword}
         activeOutlineColor='purple'
         backgroundColor="white"
         outlineColor='black'
@@ -46,7 +76,7 @@ export default function LoginPage({ navigation }) {
     <Button mode="elevated" className="mt-5" onPress={handleLogin} compact={true} buttonColor='white' textColor='purple'>
       Login
     </Button>
-    <Button mode="elevated" className="mt-5" onPress={() => console.log('Pressed')} compact={true} buttonColor='white' textColor='purple'>
+    <Button mode="elevated" className="mt-5" onPress={() => console.log("fafa")} compact={true} buttonColor='white' textColor='purple'>
       Register
     </Button>
     </View>
