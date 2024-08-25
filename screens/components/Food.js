@@ -36,7 +36,7 @@ function FoodCard({fID}) {
             <Text style={styles.header}>₹{food.price}</Text>
             <Card.Actions>
                 <Button onPress={()=> {
-                    navigation.navigate("FoodReviewPage" , {fID})}}>
+                    navigation.navigate("ReviewFormPage" , {fID})}}>
                 <Text style={styles.name}>Reviews ▶</Text>
                 </Button>
             </Card.Actions>
