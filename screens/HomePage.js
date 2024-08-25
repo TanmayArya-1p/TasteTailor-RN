@@ -9,6 +9,7 @@ import {homeCanteenSearchAtom} from "./atoms"
 import { Button } from 'react-native-paper';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
+let canteen_data = require("./canteens.json")
 
 
 export default function HomePage({ route }) {
@@ -16,7 +17,7 @@ export default function HomePage({ route }) {
   username == null ? username = "test" : true
   navigation = useNavigation()
 
-
+  
   const [canteenFilter, setCanteenFilter] = useRecoilState(homeCanteenSearchAtom)
 
   return (
@@ -37,8 +38,12 @@ export default function HomePage({ route }) {
         style={{backgroundColor:"white" , shadowColor:"#ad08ff" , borderColor : "black" , borderWidth : 0.3 , borderColor:"#ad08ff" , borderRadius:10}}
       ></Searchbar>
       <ScrollView>
-        {[...Array(10)].map((_, index) => (<CanteenCard canteenID={index}></CanteenCard>
-        ))}
+        {[...Array(2)].map((_, index) => {
+          if(canteen_data[index].name.toLowerCase().includes(canteenFilter.toLowerCase())){
+            return (<CanteenCard canteenID={index}></CanteenCard>)
+          }
+          return <></>
+        })}
       </ScrollView>
 
     </View>

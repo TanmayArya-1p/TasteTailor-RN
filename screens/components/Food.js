@@ -5,28 +5,34 @@ import { Card , text} from 'react-native-paper';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { Button , Icon , ProgressBar } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { useRecoilValueLoadable ,useRecoilValue } from 'recoil';
+import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from '../atoms'
+import {AsyncStorage} from 'react-native';
+
+
+
 
 
 function capitalize(s) {
     return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function FoodCard({fID}) {
+function FoodCard({fID ,food}) {
     // TODO : FETCH IT FROM ACTUAL BACKEND
     navigation = useNavigation()
-    let food = {
-        foodID : fID,
-        name: 'Maggi',
-        type : "savory",
-        price : 10,
-        serves: 1,
-        props : ["spicy" , "sweet"],
-        canteen_id : [],
-        reviewIDs : [],
-        rating: 3,
-        imgUrl : 'https://picsum.photos/700'
-    }
-
+    // let food = {
+    //     foodID : fID,
+    //     name: 'Maggi',
+    //     type : "savory",
+    //     price : 10,
+    //     serves: 1,
+    //     props : ["spicy" , "sweet"],
+    //     canteen_id : [],
+    //     reviewIDs : [],
+    //     rating: 3,
+    //     imgUrl : 'https://picsum.photos/700'
+    // }
     return <>
           <Card key={fID} style={styles.foodCard}>
             <Card.Title titleStyle={styles.header} title={`${food.name}, ₹${food.price}`} subtitle={food.description}/>
@@ -43,7 +49,7 @@ function FoodCard({fID}) {
 
             <Card.Actions style={{alignContent:"center"}}>
                 <Button onPress={()=> {
-                    navigation.navigate("FoodReviewPage" , {fID})}}>
+                    navigation.navigate("FoodReviewPage" , {fID,food})}}>
                 <Text style={styles.name1}>Reviews ▶</Text>
                 </Button>
             </Card.Actions>
@@ -53,47 +59,102 @@ function FoodCard({fID}) {
 
 
 const FoodReviewPage = ({ route }) => {
-    const {fID } = route.params
-    let food = {
-        foodID : fID,
-        name: 'Maggi',
-        type : "savory",
-        price : 10,
-        serves: 1,
-        props : ["spicy" , "sweet"],
-        canteen_id : [],
-        reviewIDs : [],
-        rating: 3,
-        imgUrl : 'https://picsum.photos/700'
-    }
-    reviews = [{
-        id: 1,
-        reviewer: 'Reviewer 1',
-        reviewText: 'This is a review for review ID 1.',
-        rating: 4,
-    },
-    {
-        id: 1,
-        reviewer: 'Reviewer 1',
-        reviewText: 'This is a review for review ID 1.',
-        rating: 4,
-    },
-    {
-        id: 1,
-        reviewer: 'Reviewer 1',
-        reviewText: 'This is a review for review ID 1.',
-        rating: 4,
-    },
-    {
-        id: 1,
-        reviewer: 'Reviewer 1',
-        reviewText: 'This is a review for review ID 1.',
-        rating: 4,
-    }];
-    propertyRatings = [{
-        name: 'Spicy',
-        rating: 4,
-    }];
+    const {fID,food } = route.params
+    const serverUrl = useRecoilValueLoadable(serverUrlAtom)
+
+
+    // let food = {
+    //     foodID : fID,
+    //     name: 'Maggi',
+    //     type : "savory",
+    //     price : 10,
+    //     serves: 1,
+    //     props : ["spicy" , "sweet"],
+    //     canteen_id : [],
+    //     reviewIDs : [],
+    //     rating: 3,
+    //     imgUrl : 'https://picsum.photos/700'
+    // }
+    // reviews = [{
+    //     id: 1,
+    //     reviewer: 'Reviewer 1',
+    //     reviewText: 'This is a review for review ID 1.',
+    //     rating: 4,
+    // },
+    // {
+    //     id: 1,
+    //     reviewer: 'Reviewer 1',
+    //     reviewText: 'This is a review for review ID 1.',
+    //     rating: 4,
+    // },
+    // {
+    //     id: 1,
+    //     reviewer: 'Reviewer 1',
+    //     reviewText: 'This is a review for review ID 1.',
+    //     rating: 4,
+    // },
+    // {
+    //     id: 1,
+    //     reviewer: 'Reviewer 1',
+    //     reviewText: 'This is a review for review ID 1.',
+    //     rating: 4,
+    // }];
+    // propertyRatings = [{
+    //     name: 'Spicy',
+    //     rating: 4,
+    // }];
+
+    const [reviews, setReviews] = useState([]);
+    const [propertyRatings, setPropertyRatings] = useState({});
+    const username = useRecoilValue(userNameAtom)
+    const sID = useRecoilValue(sIDAtom)
+    console.log("Before food.props" ,food)
+    // food.Props.forEach((a)=>{
+    //   propertyRatings[a] = 0
+    // })
+
+    useEffect(() => {
+      async function getReviews() {
+        console.log(food)
+        console.log("REVIEW GEETTER",serverUrl.contents + `/reviews/items/${food.id}`)
+        let res =null
+        try{
+          res = await axios.get("http://"+serverUrl.contents + `/reviews/items/${food.id}` , {
+            headers: {
+              'Auth': username+" "+sID
+            }
+          })
+        }
+        catch(e){
+          console.log("Error getting reviews",e)
+        }
+
+
+        
+        console.log("Reviews" , res.data)
+        let temp_reviews = []
+        res.data.slice(0,5).map((review,index)=> {
+          console.log("PROCESSING",review)
+          // res.data.CustomParameters.slice(1).foreach((a)=>{
+          //   propertyRatings[a] = propertyRatings[a] + res.data.CustomParameters[a]
+          // })
+          temp_reviews.push({
+            id: index,
+            reviewer: review.reviewerId.toString(),
+            reviewText: review.text,
+            rating: review.customParameters.overall,
+          })
+
+        })
+        setReviews(temp_reviews);
+      }
+      getReviews()
+
+
+    },[])
+
+    console.log("REVIEWS TEMP FBHUAWAFUKHAFKHUAFHYJUHJ",reviews)
+    
     return (
       <ScrollView style={styles.container}>
         <Image source={{ uri: food.imgUrl }} style={styles.image} />
@@ -114,7 +175,7 @@ const FoodReviewPage = ({ route }) => {
         </View>
   
         {/* Property Meters */}
-        {propertyRatings.map((property, index) => (
+        {/* {propertyRatings.map((property, index) => (
           <View key={index} style={styles.propertyContainer}>
             <Text style={styles.propertyName}>{property.name}</Text>
             <ProgressBar
@@ -124,7 +185,7 @@ const FoodReviewPage = ({ route }) => {
             />
             <Text style={styles.propertyRating}>{property.rating} / 5</Text>
           </View>
-        ))}
+        ))} */}
   
         {/* Reviews Section */}
         <Text style={styles.reviewsTitle}>Recent Reviews</Text>
@@ -144,12 +205,12 @@ const FoodReviewPage = ({ route }) => {
             </Card>
           ))
         ) : (
-          <Text>No reviews available.</Text>
+          <Text></Text>
         )}
         <Card key={"Add Review"} style={styles.addreviewCard} className="">
             <Card.Actions style={{alignContent:"center" , justifyContent:"center"}}>
                 <Button style={{width:"100%" , borderWidth:0}} onPress={()=> {
-                    navigation.navigate("ReviewFormPage" , {fID})}}>
+                    navigation.navigate("ReviewFormPage" , {fID,food})}}>
                     <Text style={{color:"black" , fontSize:18}}>📝 Write A Review</Text>
                 </Button>
             </Card.Actions>

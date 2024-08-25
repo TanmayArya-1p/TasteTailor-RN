@@ -4,6 +4,7 @@ import { Button , TextInput } from 'react-native-paper';
 import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from "./atoms"
 import { useRecoilState, useRecoilValue ,useRecoilValueLoadable} from 'recoil';
 import axios from 'axios';
+import { useWorkletCallback } from 'react-native-reanimated';
 
 export default function LoginPage({ navigation }) {
   const [username, setUsername] = useState('');
@@ -15,6 +16,33 @@ export default function LoginPage({ navigation }) {
   const serverUrl = useRecoilValueLoadable(serverUrlAtom)
 
 
+  const handleRegister = () => {
+    if (username === '') {
+      alert('Please enter your enrollment number');
+      return;
+    }
+    if(password === '') {
+      alert("Invalid Password")
+      return;
+    }
+    axios.post("http://"+serverUrl.contents+"/users/create" , {
+      enrollmentNumber : username,
+      name: username,
+      password : password
+    }).then((res)=> {
+      console.log(res.data,res.status)
+      if(res.status !== 200) {
+        alert("Invalid Username or Password")
+        return;
+      }
+      setSID(res.data.sessionToken)
+      setBakedPassword(password)
+      setBakedUsername(res.data.enrollmentNumber)
+      navigation.navigate('Home', { username });
+    })
+    return;
+    
+  }
 
   const handleLogin = () => {
     if (username === '') {
@@ -76,7 +104,10 @@ export default function LoginPage({ navigation }) {
     <Button mode="elevated" className="mt-5" onPress={handleLogin} compact={true} buttonColor='white' textColor='purple'>
       Login
     </Button>
-    <Button mode="elevated" className="mt-5" onPress={() => console.log("fafa")} compact={true} buttonColor='white' textColor='purple'>
+    {/* <Button mode="elevated" className="mt-5" onPress={() => navigation.navigate("Home" , {username})} compact={true} buttonColor='white' textColor='purple'>
+      Login
+    </Button> */}
+    <Button mode="elevated" className="mt-5" onPress={handleRegister} compact={true} buttonColor='white' textColor='purple'>
       Register
     </Button>
     </View>

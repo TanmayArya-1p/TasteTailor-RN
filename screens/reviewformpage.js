@@ -4,27 +4,35 @@ import { Button , TextInput } from 'react-native-paper';
 import StarRating from 'react-native-star-rating-widget';
 import Slider from '@react-native-community/slider';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from './atoms'
+import {AsyncStorage} from 'react-native';
+import { useRecoilValueLoadable , useRecoilValue } from 'recoil';
+import axios from 'axios';
 
 
 export default function ReviewFormPage({ navigation, route }) {
-    const { fID } = route.params; 
+    const { fID, food } = route.params; 
+    food.props = food.Props
     const [ratings, setRatings] = useState({});
     const [rating, setRating] = useState(0);
     const [textRating, setTextRating] = useState("");
+    const username = useRecoilValue(userNameAtom)
+    const sID = useRecoilValue(sIDAtom)
+    const serverUrl = useRecoilValueLoadable(serverUrlAtom);
 
   
-    const food = {
-      foodID: fID,
-      name: 'Maggi',
-      type: 'savory',
-      price: 10,
-      serves: 1,
-      props: ['spicy', 'sweet'],
-      canteen_id: [],
-      reviewIDs: [101, 102, 103],
-      rating: 3,
-      imgUrl: 'https://picsum.photos/700',
-    };
+    // const food = {
+    //   foodID: fID,
+    //   name: 'Maggi',
+    //   type: 'savory',
+    //   price: 10,
+    //   serves: 1,
+    //   props: ['spicy', 'sweet'],
+    //   canteen_id: [],
+    //   reviewIDs: [101, 102, 103],
+    //   rating: 3,
+    //   imgUrl: 'https://picsum.photos/700',
+    // };
   
     const handleRatingChange = (prop, value) => {
       setRatings({ ...ratings, [prop]: value });
@@ -32,9 +40,35 @@ export default function ReviewFormPage({ navigation, route }) {
   
     const handleSubmit = () => {
       console.log('Submitted Ratings:', ratings);
+      ratings.overall = rating
+      const postData = {
+        id: "66cb1bd9abaccd1f7a94f6a9",
+        Target: `items/${food.id}`,
+        reviewerId: parseInt(username),
+        Text: textRating,
+        CustomParameters: ratings,
+        timestamp: Date.now()
+      };
+      
+      const url = "http://"+serverUrl.contents+`/reviews/items/${food.id}`; 
+      console.log("FORM SERVER URL" , url , postData)
+      const config = {
+        headers: {
+          'Auth': username+" "+sID // Replace 'your-token-here' with your actual token
+        }
+      };
+      
+      
+      axios.post(url, postData,config)
+        .then(response => {
+          console.log('Response:', response.data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
       navigation.goBack();
     };
-  
+    console.log("FORM FOOD" , food)
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <ScrollView contentContainerStyle={styles.container} className="display-flex flex-1">

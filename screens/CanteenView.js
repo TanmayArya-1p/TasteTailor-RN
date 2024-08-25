@@ -4,6 +4,10 @@ import { Card , Button, Icon} from 'react-native-paper';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { Searchbar } from 'react-native-paper';
 import {FoodCard} from './components/Food';
+import { useRecoilValue ,useRecoilValueLoadable} from 'recoil';
+import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from "./atoms"
+import axios from 'axios';
+
 
 function capitalize(s) {
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -11,7 +15,41 @@ function capitalize(s) {
 
 export default function CanteenView({route}) {
     let {canteen} = route.params
-    let {foodFilter , setFoodFilter} = useState("")
+    let [foodFilter , setFoodFilter] = useState("")
+    const [canteenFoodItems, setCanteenFoodItems] = useState([])
+    const serverUrl = useRecoilValueLoadable(serverUrlAtom)
+
+    const username = useRecoilValue(userNameAtom)
+    const sID = useRecoilValue(sIDAtom)
+
+    React.useEffect(() => {
+
+      async function getItems() {
+        console.log("HEREHEHEHEHEHR", canteen)
+        let temp = []
+        for (let i = 0; i < canteen.food_items.length; i++) { 
+          console.log(serverUrl.contents+`/items/${canteen.food_items[i]}`)
+          let res = null
+          try {
+            res = await axios.get("http://"+serverUrl.contents+`/items/${canteen.food_items[i]}` , {
+              headers: {
+                'Auth': username+" "+sID
+              }
+            })
+            console.log("REQUESTS DONE")
+          }
+          catch (error) {
+            console.error(error);
+
+          }
+
+          console.log("response ",res.data)
+          temp.push(res.data)
+        }
+        setCanteenFoodItems(temp)
+      }
+      getItems()
+    }, [canteen])
   return (
     <View style={styles.container}>
       <Text style={styles.name}>{canteen.name}</Text>
@@ -26,10 +64,7 @@ export default function CanteenView({route}) {
         </View>
 
         <Text style={styles.info}>Opening Hours: {capitalize(canteen.openingHours)}</Text>
-        <StarRatingDisplay
-                    rating={canteen.rating}
-                    starSize={20}
-                />
+
       </View>
       <Searchbar
         placeholder='Search Food Items...'
@@ -40,9 +75,13 @@ export default function CanteenView({route}) {
         style={{backgroundColor:"white" , shadowColor:"#ad08ff" , borderColor : "black" ,marginBottom:10 , borderWidth : 0.2 , borderColor:"#ad08ff" , borderRadius:10 , height:60}}
       ></Searchbar>
       <ScrollView horizontal style={styles.scrollView}>
-        {canteen.food_items.map((item, index) => (
-            <FoodCard fID={index}></FoodCard>
-        ))}
+        {canteenFoodItems.map((item, index) => {
+          console.log("item",item.name + " "+foodFilter)
+          if(item.name.includes(foodFilter)){
+            return(<FoodCard fID={index} food={item}></FoodCard>)
+          }
+          return <></>
+        })}
       </ScrollView>
     </View>
   );
