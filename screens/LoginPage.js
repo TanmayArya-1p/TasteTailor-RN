@@ -7,7 +7,17 @@ export default function LoginPage({ navigation }) {
   const [username, setUsername] = useState('');
 
   const handleLogin = () => {
+    if (username === '') {
+      alert('Please enter your enrollment number');
+      return;
+    }
+    if (username === 'admin') {
+      navigation.navigate('Home', { username });
+      return;
+    }
+
     navigation.navigate('Home', { username });
+
   };
 
   return (
