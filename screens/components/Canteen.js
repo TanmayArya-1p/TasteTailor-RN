@@ -18,7 +18,9 @@ function CanteenCard({canteenID}) {
         food_items : [1,2,3,4],
         openingHours: '10 AM - 9 PM',
         rating : 4,
-        imgUrl : 'https://picsum.photos/700'
+        imgUrl : 'https://picsum.photos/700',
+        lat: 29.87047,
+        long: 77.89548
     }
 
     return <>

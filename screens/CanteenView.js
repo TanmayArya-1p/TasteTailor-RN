@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
-import { Card } from 'react-native-paper';
+import { View, Text, Image, ScrollView, StyleSheet , Linking } from 'react-native';
+import { Card , Button, Icon} from 'react-native-paper';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { Searchbar } from 'react-native-paper';
 import {FoodCard} from './components/Food';
@@ -18,8 +18,13 @@ export default function CanteenView({route}) {
       <Image source={{ uri: canteen.imgUrl }} style={styles.image} />
 
       <View style={styles.detailsContainer}>
+        <View className="flex-row justify-between">
+          <Text style={styles.info}>{capitalize(canteen.type)} Canteen</Text>
+          <Button icon="google-maps" style={{borderWidth:0.3 , borderColor:"black"}} onPress={() => Linking.openURL(`google.navigation:q=${canteen.lat}+${canteen.long}`)}>
+            Maps
+          </Button>
+        </View>
 
-        <Text style={styles.info}>Type: {capitalize(canteen.type)} Canteen</Text>
         <Text style={styles.info}>Opening Hours: {capitalize(canteen.openingHours)}</Text>
         <StarRatingDisplay
                     rating={canteen.rating}
