@@ -81,7 +81,8 @@ export default function LoginPage({ navigation }) {
       <View style={{alignItems:"center"}}>
         <Image
           source={require('./assets/segfaulticon.png')}
-          style={styles.image}
+          style={{}}
+          className="mb-5"
         />
       </View>
       <Text style={styles.title}>TasteTailor</Text>

@@ -21,6 +21,7 @@ function capitalize(s) {
 function FoodCard({fID ,food}) {
     // TODO : FETCH IT FROM ACTUAL BACKEND
     navigation = useNavigation()
+    console.log("FOOD CARD" , food)
     // let food = {
     //     foodID : fID,
     //     name: 'Maggi',
@@ -44,7 +45,7 @@ function FoodCard({fID ,food}) {
                 />
             </Card.Content>
             <View style={{alignItems:"center" , justifyContent:"center"}}>
-            <Card.Cover style = {styles.logo} styles={{alignContent:"center", alignItems:"center"}} source={{ uri: food.imgUrl }} />
+            <Card.Cover style = {styles.logo} styles={{alignContent:"center", alignItems:"center"}} source={{ uri: food.imgURL }} />
             </View>
 
             <Card.Actions style={{alignContent:"center"}}>
@@ -158,7 +159,7 @@ const FoodReviewPage = ({ route }) => {
     
     return (
       <ScrollView style={styles.container}>
-        <Image source={{ uri: food.imgUrl }} style={styles.image} />
+        <Image source={{ uri: food.imgURL }} style={styles.image} />
   
         {/* Food Details */}
         <View style={styles.detailsContainer}>

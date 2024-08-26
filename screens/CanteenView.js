@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, Image, ScrollView, StyleSheet , Linking } from 'react-native';
 import { Card , Button, Icon} from 'react-native-paper';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
-import { Searchbar } from 'react-native-paper';
+import { Searchbar,ActivityIndicator } from 'react-native-paper';
 import {FoodCard} from './components/Food';
 import { useRecoilValue ,useRecoilValueLoadable} from 'recoil';
 import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from "./atoms"
@@ -16,6 +16,7 @@ function capitalize(s) {
 export default function CanteenView({route}) {
     let {canteen} = route.params
     let [foodFilter , setFoodFilter] = useState("")
+    const [loading, setLoading] = useState(true)
     const [canteenFoodItems, setCanteenFoodItems] = useState([])
     const serverUrl = useRecoilValueLoadable(serverUrlAtom)
 
@@ -52,7 +53,7 @@ export default function CanteenView({route}) {
         }
 
 
-
+        setLoading(false)
         setCanteenFoodItems(temp)
       }
       getItems()
@@ -81,7 +82,8 @@ export default function CanteenView({route}) {
         className="mb-5"
         style={{backgroundColor:"white" , shadowColor:"#ad08ff" , borderColor : "black" ,marginBottom:10 , borderWidth : 0.2 , borderColor:"#ad08ff" , borderRadius:10 , height:60}}
       ></Searchbar>
-      <ScrollView horizontal style={styles.scrollView}>
+      {loading? <ActivityIndicator size="large" className="mt-20" style={{alignSelf:"center"}}></ActivityIndicator> : true}
+      <ScrollView horizontal style={styles.scrollView} className="content-center">
         {canteenFoodItems.map((item, index) => {
           console.log("item",item.name + " "+foodFilter)
           if(item.name.toLowerCase().includes(foodFilter.toLowerCase())){
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     color: "black"
   },
   scrollView: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   foodCard: {
     width: 150,
