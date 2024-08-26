@@ -27,10 +27,14 @@ export default function CanteenView({route}) {
       async function getItems() {
         console.log("HEREHEHEHEHEHR", canteen)
         let temp = []
+
+      
+
         for (let i = 0; i < canteen.food_items.length; i++) { 
           console.log(serverUrl.contents+`/items/${canteen.food_items[i]}`)
           let res = null
           try {
+            console.log("ITEMID FOOD",canteen.food_items[i])
             res = await axios.get("http://"+serverUrl.contents+`/items/${canteen.food_items[i]}` , {
               headers: {
                 'Auth': username+" "+sID
@@ -43,15 +47,18 @@ export default function CanteenView({route}) {
 
           }
 
-          console.log("response ",res.data)
+          console.log("CANTEEN ITEMS RESP ",res.data)
           temp.push(res.data)
         }
+
+
+
         setCanteenFoodItems(temp)
       }
       getItems()
     }, [canteen])
   return (
-    <View style={styles.container}>
+    <View style={styles.container} className="flex-1">
       <Text style={styles.name}>{canteen.name}</Text>
       <Image source={{ uri: canteen.imgUrl }} style={styles.image} />
 
@@ -77,7 +84,7 @@ export default function CanteenView({route}) {
       <ScrollView horizontal style={styles.scrollView}>
         {canteenFoodItems.map((item, index) => {
           console.log("item",item.name + " "+foodFilter)
-          if(item.name.includes(foodFilter)){
+          if(item.name.toLowerCase().includes(foodFilter.toLowerCase())){
             return(<FoodCard fID={index} food={item}></FoodCard>)
           }
           return <></>

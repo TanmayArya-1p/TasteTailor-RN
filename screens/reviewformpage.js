@@ -20,7 +20,6 @@ export default function ReviewFormPage({ navigation, route }) {
     const sID = useRecoilValue(sIDAtom)
     const serverUrl = useRecoilValueLoadable(serverUrlAtom);
 
-  
     // const food = {
     //   foodID: fID,
     //   name: 'Maggi',
@@ -54,7 +53,7 @@ export default function ReviewFormPage({ navigation, route }) {
       console.log("FORM SERVER URL" , url , postData)
       const config = {
         headers: {
-          'Auth': username+" "+sID // Replace 'your-token-here' with your actual token
+          'Auth': username+" "+sID
         }
       };
       

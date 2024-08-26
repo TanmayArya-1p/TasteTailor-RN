@@ -22,11 +22,13 @@ export default function HomePage({ route }) {
 
   return (
     <View style={styles.container}>
-      <View className="mb-5 flex-row justify-between">
+      <View className="flex-row justify-between">
         <Text style={styles.header}>Welcome {username}!</Text>
         <Button mode="contained" onPress={() => navigation.navigate("UserSettings")} style={{borderRadius:25 , height:50 , width:20 , backgroundColor:"#f6e8fc"}}>
         </Button>
       </View>
+      <Button icon="magnify" mode="outlined" onPress={()=>console.log(1)} className="p-1 m-2 w-40" style={{borderWidth:0.2}} onPress={()=>navigation.navigate("ItemsQuery")}><Text className="m-4" style={{fontSize:16}}>Item Search</Text></Button>
+
 
       <Searchbar
         placeholder='Search Canteens'

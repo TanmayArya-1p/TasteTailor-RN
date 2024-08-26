@@ -4,7 +4,7 @@
         "name": "Rajendra Bhavan Day Canteen",
         "type" : "day",
         "bhavan" : "Rajendra Bhavan",
-        "food_items" : ["66cb1bd9abaccd147a94f6a9"],
+        "food_items" : ["66cb1bd9abaccd147a94f6a9","66cb7d1ab1685c33ecb248d8","66cb7b37b1685c33ecb248d6","66cb7accb1685c33ecb248d5","66cb7a38b1685c33ecb248d4","66cb781bb1685c33ecb248d2","66cb77efb1685c33ecb248d1","66cb77aeb1685c33ecb248d0","66cb7793b1685c33ecb248cf","66cb1bd9abacc51f7a94f6a9","66cb1bd9abaccd1f7594f6a9","66cb781bb1685c33ecb248d2"],
         "openingHours": "2 PM - 2 AM",
         "imgUrl" : "https://github.com/TanmayArya-1p/blob/blob/main/tastetailor/rjb_day.jpg?raw=true",
         "lat": 29.87047,

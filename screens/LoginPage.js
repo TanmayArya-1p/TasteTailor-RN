@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet , Image } from 'react-native';
 import { Button , TextInput } from 'react-native-paper';
 import {userNameAtom,  passwordAtom, sIDAtom,homeCanteenSearchAtom , serverUrlAtom} from "./atoms"
 import { useRecoilState, useRecoilValue ,useRecoilValueLoadable} from 'recoil';
@@ -78,6 +78,12 @@ export default function LoginPage({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <View style={{alignItems:"center"}}>
+        <Image
+          source={require('./assets/segfaulticon.png')}
+          style={styles.image}
+        />
+      </View>
       <Text style={styles.title}>TasteTailor</Text>
       <TextInput
         placeholder="Enrollment No"
@@ -88,6 +94,8 @@ export default function LoginPage({ navigation }) {
         activeOutlineColor='purple'
         backgroundColor="white"
         outlineColor='black'
+        style={{color:"black"}}
+        contentStyle={{color:"black"}}
       />
       <TextInput
         placeholder="Password"

@@ -40,7 +40,7 @@ function FoodCard({fID ,food}) {
                 <StarRatingDisplay
                     rating={food.rating}
                     starSize={17}
-                    style={{marginBottom:20}}
+                    style={{marginBottom:10}}
                 />
             </Card.Content>
             <View style={{alignItems:"center" , justifyContent:"center"}}>
@@ -109,9 +109,9 @@ const FoodReviewPage = ({ route }) => {
     const username = useRecoilValue(userNameAtom)
     const sID = useRecoilValue(sIDAtom)
     console.log("Before food.props" ,food)
-    // food.Props.forEach((a)=>{
-    //   propertyRatings[a] = 0
-    // })
+    food.Props.forEach((a)=>{
+      propertyRatings[a] = 0
+    })
 
     useEffect(() => {
       async function getReviews() {
@@ -129,15 +129,16 @@ const FoodReviewPage = ({ route }) => {
           console.log("Error getting reviews",e)
         }
 
-
         
         console.log("Reviews" , res.data)
         let temp_reviews = []
         res.data.slice(0,5).map((review,index)=> {
           console.log("PROCESSING",review)
+
           // res.data.CustomParameters.slice(1).foreach((a)=>{
           //   propertyRatings[a] = propertyRatings[a] + res.data.CustomParameters[a]
           // })
+
           temp_reviews.push({
             id: index,
             reviewer: review.reviewerId.toString(),
@@ -227,7 +228,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: "black",
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 17,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.8,
