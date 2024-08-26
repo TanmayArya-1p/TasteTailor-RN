@@ -3,7 +3,7 @@
 <img src="https://github.com/TanmayArya-1p/blob/blob/main/segfaulticon.png?raw=true" width=80></img>
 </p>
 
-<h1 align="center">TasteTailor</h1>h1>
+<h1 align="center">TasteTailor</h1>
 Made for Hack8all hackathon 2024
 The aim of the project is two help out freshers in making a choice on what to eat and also to help seniors by helping them understand their taste tolerances with respect to the rest of the student body so they can search for exactly what they want without needing to co-relate an arbitrary number to a taste.
 
