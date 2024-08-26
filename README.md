@@ -1,12 +1,15 @@
+<p align="center">
+<img src="https://github.com/TanmayArya-1p/blob/blob/main/tastetailor/segfaulticon.png?raw=true" width=80></img>
+<img src="https://github.com/TanmayArya-1p/blob/blob/main/segfaulticon.png?raw=true" width=80></img>
+</p>
 
-<img src="https://github.com/TanmayArya-1p/blob/blob/main/tastetailor/segfaulticon.png?raw=true" ></img>
-
-
-# TasteTailor
+<h1 align="center">TasteTailor</h1>h1>
 Made for Hack8all hackathon 2024
 The aim of the project is two help out freshers in making a choice on what to eat and also to help seniors by helping them understand their taste tolerances with respect to the rest of the student body so they can search for exactly what they want without needing to co-relate an arbitrary number to a taste.
 
-# Tech Stack
+<h1 align="center">Tech Stack</h1>
+
+
 ```mermaid
 flowchart TD
     A["Frontend\nReact Native"] -->|Http Requests| B(Backend)
@@ -14,8 +17,11 @@ flowchart TD
 ```
 
 
-### Installation and Setup
-### Pre-requisites:
+# Installation and Setup
+
+- If you want to just use the app then head to the [releases](https://github.com/TanmayArya-1p/TasteTailor-RN/releases) section and download the latest APK file.
+## Build Your Own APK
+#### Pre-requisites:
       - NPM 
       - Node.js
       - Android SDK
